@@ -38,6 +38,8 @@ a{
   color: #222;
   border-radius: 5px;
   cursor: pointer;
+  border: none;
+  font-size: 1rem;
 }
 
 .btn_box{
@@ -360,4 +362,71 @@ footer .footer_menu{
 
 footer .right{
   gap: 1rem;
+}
+
+/* 인풋 셋팅 */
+
+.inputs{
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.input_box{
+  width: 100%;
+  min-height: 40px;
+  background-color: #ffb7005f;
+  border-radius: 5px;
+  display: flex;
+  align-items: center;
+  padding: 0 20px;
+}
+
+.input_box label{
+  color: gray;
+  border-right: 1px solid #d1d1d1;
+  padding-right: 20px;
+  margin-right: 20px;
+  white-space: nowrap;
+  text-align: center;
+}
+
+.input_box input,
+.input_box select{
+  width: 100%;
+  border: none;
+  background-color: transparent;
+  font-size: initial;
+  font-family: initial;
+}
+
+input:focus,
+select:focus{
+  outline: none;
+}
+
+.header_emp{
+  height: 70px;
+}
+
+/* 로그인 페이지 */
+
+.login_section{
+  padding: 200px 0 !important;
+}
+
+.login{
+  width: 400px;
+}
+
+.login label{
+  min-width: 81px;
+}
+
+.login a{
+  color: gray;
+  font-size: 15px;
+  text-decoration: underline;
+  text-underline-offset: 4px;
+  margin-top: .5rem;
 }
