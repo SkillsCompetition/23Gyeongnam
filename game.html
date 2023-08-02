@@ -41,37 +41,54 @@
 
   <div class="content">
 
-    <div class="login_section">
-      <div class="wrap col-flex aic">
-        <div class="title col-flex aic">
-          <h1>로그인</h1>
+    <div class="game_section">
+      <div class="wrap">
+        <div class="title">
+          <h1>관광게임하기</h1>
           <div class="line"></div>
+          <p>관광 게임을 즐겨보세요</p>
         </div>
 
-        <form action="/login" class="login inputs">
-
-          <div class="input_box">
-            <label for="userid">아이디</label>
-            <input type="text" name="userid" id="userid">
+        <div class="game">
+          <div class="top flex jcsb">
+            <div class="btn_box">
+              <div class="btn">호두과자 먹는 캐릭터 게임</div>
+              <div class="btn">청안 명물 받아먹기 게임</div>
+            </div>
+            <div class="input_box">
+              <label for="name">이름</label>
+              <input type="text" name="name" id="name" placeholder="이름을 입력하세요">
+            </div>
           </div>
 
-          <div class="input_box">
-            <label for="password">패스워드</label>
-            <input type="password" name="password" id="password">
-          </div>
+          <div class="gamezone">
+            <div class="canvas_box"></div>
+            <div class="col-flex">
+              <div class="game_btn_box">
 
-          <div class="btn_box full">
-            <button type="button" class="btn">로그인</button>
-          </div>
+              </div>
 
-          <div class="flex jcc">
-            <a href="#">아이디가 없으신가요?</a>
-          </div>
+              <div class="info">
+                <div class="flex name_box aic">
+                  <img src="resources/img/game/icon.png" alt="">
+                  <h2>호두과자 먹는 뱀 게임</h2>
+                </div>
 
-        </form>
+                <div class="btn">규칙 설명</div>
+
+                <div class="description">
+                  <div style="height: 20px;"></div>
+                  <p>20 X 20의 칸에서 뱀이 움직입니다. 
+                    뱀의 방향은 방향키(△, ▽, ◁, ▷)를 통해 제어합니다.
+                    랜덤으로 생성되는 호두과자를 하나씩 먹을 때마다 뱀의 길이도 늘어납니다.
+                    벽에 닿으면 뱀은 죽고, 게임이 끝납니다.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
-
   </div>
 
   <footer>

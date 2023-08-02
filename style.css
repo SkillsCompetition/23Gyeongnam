@@ -373,11 +373,10 @@ footer .right{
 }
 
 .input_box{
-  width: 100%;
   min-height: 40px;
   background-color: #ffb7005f;
   border-radius: 5px;
-  display: flex;
+  display: inline-flex;
   align-items: center;
   padding: 0 20px;
 }
@@ -429,4 +428,73 @@ select:focus{
   text-decoration: underline;
   text-underline-offset: 4px;
   margin-top: .5rem;
+}
+
+/* 게임 */
+
+.game .gamezone{
+  width: 100%;
+  height: 750px;
+  background-image: url("resources/img/game/background.jpg");
+  background-size: cover;
+  border-radius: 5px;
+  margin-top: 1rem;
+  padding: 50px;
+  display: grid;
+  grid-template-columns: 650px auto;
+  gap: 1rem;
+}
+
+.game .gamezone .canvas_box{
+  width: 650px;
+  height: 650px;
+  background-color: #fff;
+  border-radius: 5px;
+}
+
+.game .gamezone .col-flex{
+  gap: 1rem;
+}
+
+.game .gamezone .col-flex > div{
+  padding: 40px;
+  border-radius: 5px;
+  background-color: #fff;
+}
+
+.game .info{
+  position: relative;
+}
+
+.game .info .btn{
+  position: absolute;
+  top: 40px;
+  right: 40px;
+}
+
+.game .info h2{
+  padding-top: 2px;
+  height: 37px;
+}
+
+.game .info .description{
+  max-height: 0;
+  overflow: hidden;
+  transition: 0.4s;
+}
+
+.game .info .description p{
+  line-height: 1.5;
+}
+
+.game .info .btn:hover + .description{
+  max-height: 200px;
+}
+
+.game .name_box{
+  gap: .6rem;
+}
+
+.game .name_box img{
+  width: 40px;
 }
