@@ -181,12 +181,12 @@ header .utility{
 
 .visual .text_box .box{
   gap: 2rem;
-  margin-top: 1rem;
+  margin-top: 2rem;
 }
 
 .visual label,
 .visual a{
-  color: #ffb700;
+  color: #000;
 }
 
 .visual img{
@@ -229,6 +229,15 @@ header .utility{
 
 #visual:checked + .visual img{
   animation-play-state: paused;
+}
+
+.visual .move_btn{
+  position: absolute;
+  display: flex;
+  gap: 1rem;
+  bottom: 20px;
+  left: 50%;
+  transform: translate(-50%);
 }
 
 /* 콘텐츠 영역 */
@@ -571,6 +580,7 @@ select:focus{
   left: 50%;
   transform: translate(-50%);
   z-index: 999;
+  display: none;
 }
 
 @media (max-width:480px) {
@@ -603,6 +613,10 @@ select:focus{
   }
 
   .gamepage_error{
+    display: flex;
+  }
+
+  .mobile_menu{
     display: flex;
   }
 }
