@@ -452,7 +452,7 @@ select:focus{
 
 /* 게임 */
 
-.game .gamezone{
+.game .gamezone > div{
   width: 100%;
   height: 750px;
   background-image: url("resources/img/game/background.jpg");
@@ -470,6 +470,7 @@ select:focus{
   height: 650px;
   background-color: #fff;
   border-radius: 5px;
+  padding: 25px;
 }
 
 .game .gamezone .col-flex{
@@ -780,4 +781,80 @@ select:focus{
 
 .reviewlist .item small span{
   color: orange;
+}
+
+.modal{
+  width: 100%;
+  height: 100vh;
+  position: fixed;
+  top: 0;
+  left: 0;
+  background-color: #0004;
+  display: none;
+  justify-content: center;
+  align-items: center;
+  z-index: 999999;
+}
+
+.modal.open{
+  display: flex;
+}
+
+.modal > div .main{
+  padding: 30px;
+}
+
+.modal > div{
+  border-radius: 5px;
+  background-color: #fff;
+  overflow: hidden;
+}
+
+.modal > div > .btn_box{
+  width: 100%;
+  gap: 0;
+}
+
+.modal > div > .btn_box .btn{
+  width: 100%;
+  height: 60px;
+  border-radius: 0;
+}
+
+.gamezone .game_btn_box{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+}
+
+.gamezone .game_status{
+  width: 100%;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  background-color: #f2f2f2;
+  padding: 20px 0;
+  border-radius: 5px;
+}
+
+.gamezone .game_status > div{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: .5rem;
+}
+
+.gamezone .game_status .score span,
+.gamezone .game_status .timer h1{
+  font-size: 2.2rem;
+}
+
+.result_modal .score{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 400px;
+  padding: 15px 0;
+  background-color: #f2f2f2;
+  border-radius: 5px;
 }
