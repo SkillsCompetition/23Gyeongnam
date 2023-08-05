@@ -273,6 +273,7 @@ const Snake = {
     Snake.drawSnake();
     Snake.changeScore();
 
+    $(".staus_btn").html("일시정지")
     $(".game_btn_box > h3").html(Game.user + "님")
   },
 
