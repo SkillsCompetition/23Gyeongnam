@@ -1,6 +1,23 @@
 const dd = console.log;
 const ls = localStorage;
 
+const kor = [
+  [/[ㄱ-깋]/g, "ㄱ"],
+  [/[ㄴ-닣]/g, "ㄴ"],
+  [/[ㄷ-딯]/g, "ㄷ"],
+  [/[ㄹ-맇]/g, "ㄹ"],
+  [/[ㅁ-밓]/g, "ㅁ"],
+  [/[ㅂ-빟]/g, "ㅂ"],
+  [/[ㅅ-싷]/g, "ㅅ"],
+  [/[ㅇ-잏]/g, "ㅇ"],
+  [/[ㅈ-짛]/g, "ㅈ"],
+  [/[ㅊ-칳]/g, "ㅊ"],
+  [/[ㅋ-킿]/g, "ㅋ"],
+  [/[ㅌ-팋]/g, "ㅌ"],
+  [/[ㅍ-핗]/g, "ㅍ"],
+  [/[ㅎ-힣]/g, "ㅎ"]
+]
+
 const App = {
   
   init(){
@@ -12,6 +29,7 @@ const App = {
     if(location.pathname.includes("game")) {
       Snake.init()
       Drop.init();
+      Game.loadRecord();
     };
   },
 
@@ -44,12 +62,12 @@ const Attraction = {
               <small>${v.distance}km</small>
             </div>
             <div class="bottom flex jcsb aic">
-              <small>별점 : ${v.point}점</small>
+              <small>별점 : ${Number(v.point).toFixed(1)}점</small>
               <small>리뷰 : ${v.review_cnt}개</small>
             </div>
             <hr>
             <div class="btn_box full">
-              <div class="btn" onclick="Review.openReview(${i})">리뷰 작성</div>
+              <a href="/review?idx=${v.idx}" class="btn">리뷰 작성</a>
             </div>
           </div>
         </div>
@@ -59,15 +77,15 @@ const Attraction = {
 
   settingInterval(){
     setInterval(async () => {
-      Attraction.loadData();
+      await Attraction.loadData();
       Attraction.settingContainer()
-    }, 5000);
+    }, 3000);
   },
 
   loadData(){
-    return $.getJSON("/resources/json/place.json")
+    return $.getJSON("/attraction_data")
       .then(res => {
-        Attraction.data = res.data;
+        Attraction.data = res;
 
         return res;
       });
@@ -77,7 +95,6 @@ const Attraction = {
 const Review = {
 
   init(){
-    Review.settingForm();
     Review.settingContainer();
   },
 
@@ -100,20 +117,6 @@ const Review = {
     }))
   },
 
-  settingForm(){
-    const data = JSON.parse(ls["review"])
-    const now = new Date(+new Date() + 32400000).toISOString().split("T")[0];
-
-    $(".review #title").val(data.title);
-    $(".review #visited_date").attr("max", now);
-  },
-
-  openReview(idx){
-    ls["review"] = JSON.stringify(Attraction.data[idx]);
-
-    location.assign("/review.html");
-  },
-
   star(e){
     let score = (e.offsetX/18).toFixed(1);
     score = score > 5 ? 5.0 : (score < 0 ? 0.0 : score);
@@ -123,45 +126,20 @@ const Review = {
     $(".star_box #score").val(score)
   },
 
-  submit(){
-    const data = {
-      title : $(".review #title").val(),
-      visited_date : $(".review #visited_date").val(),
-      score : $(".review #score").val(),
-      content : $(".review #content").val()
-    }
+  graph(idx){
+    $.getJSON(`/review_point/${idx}`)
+        .then(res => {
+          const sum = res.reduce((acc, v) => acc += Number(v), 0);
+          $(".star_box .attraction_star span:nth-child(2)").html((sum/res.length).toFixed(1))
 
-    if(!data.title.trim() || !data.visited_date.trim() || !data.content.trim()){
-      return alert("모든 값을 입력해주세요.");
-    }
-
-    const arr = JSON.parse(ls["review_list"] || "[]");
-    arr.push(data);
-
-    ls["review_list"] = JSON.stringify(arr);
-
-    navigation.addEventListener("navigate", (e) => {
-      e.intercept({
-        async handler(){
-          const html = await fetch(e.destination.url);
-          const text = await html.text();
-
-          const replace = /<body>([\w\W]*)<\/body>/.exec(text)[1];
-
-          alert("리뷰가 등록되었습니다.")
-
-          document.startViewTransition(() => {
-            document.body.innerHTML = replace;
-
-            Attraction.init();
-            Review.init();
-          });
-        }
-      })
-    }, { once : true });
-
-    location.assign("/attraction.html");
-  }
+          for(let i = 0; i <= 5; i++){
+            const filter = res.filter(v => Math.floor(v) == i);
+            $(".star_box .point").eq(i).css("width", `${filter.length/res.length * 100}%`)
+          }
+          
+          setTimeout(() => Review.graph(idx), 2000)
+        })
+  },
 
 }
 
@@ -235,7 +213,59 @@ const Game = {
     $(".gamezone").show();
     Snake.reset();
     Snake.gameStart();
+  },
+
+  save(target){
+    $(target).attr("onclick", "");
+    const min = String(Math.floor(Game.time/60));
+    const sec = String(Game.time%60);
+
+    $.post("/record", {
+      game : Game.recordGame,
+      score : Game.recordScore,
+      name : Game.user,
+      time : `${min.padStart(2, "0")}:${sec.padStart(2, "0")}`
+    }).then(() => {
+      Game.loadRecord().done(v => {
+        alert("저장되었습니다.");
+      });
+    });
+  },
+
+  loadRecord(repeat = true){
+    return $.getJSON("/record_data")
+      .then(res => {
+        Game.record = res;
+
+        Game.settingContainer();
+
+        if(repeat) setTimeout(() => Game.loadRecord(), 3000)
+      })
+  },
+
+  settingContainer(){
+    $(".result_modal .record .tbody").html(Game.record.map(v => {
+      let name = v.name;
+      if((/[A-z]/g).test(name)){
+        const length = v.name.length;
+        name = name.substr(0, 3).padEnd(length, "*");
+      }
+
+      if((/[ㄱ-힣]/g).test(name)){
+        name = kor.reduce((acc, v) => acc.replace(...v), name);
+      }
+
+      return `
+        <div>
+          <div>${name}</div>
+          <div>${v.game}</div>
+          <div>${v.score}점</div>
+          <div>${v.time}</div>
+        </div>
+      `
+    }))
   }
+
 }
 
 const Snake = {
@@ -310,6 +340,9 @@ const Snake = {
 
   gameOver(){
     clearInterval(Timer.interval);
+    Game.recordGame = "snake";
+    Game.recordScore = Snake.score;
+    Game.time = 180 - Timer.remain;
 
     Snake.showResult();
     Snake.reset();
@@ -319,7 +352,8 @@ const Snake = {
     Modal.open("result");
 
     $(".result_modal h3.title").html(`호두과자먹기 캐릭터 게임 ( ${Game.user}님 )`);
-    $(".result_modal .score").html(`${Snake.score}점`);
+    $(".result_modal .score").html(`${Game.recordScore}점`);
+    Game.settingContainer();
   },
 
   changeDirection(e){
@@ -444,6 +478,7 @@ const Snake = {
     Snake.drawSnake();
     Snake.drawFood();
   }
+
 }
 
 const Drop = {
@@ -526,6 +561,10 @@ const Drop = {
   },
 
   gameOver(){
+    Game.recordGame = "drop";
+    Game.recordScore = Drop.score;
+    Game.time = 180 - Timer.remain;
+
     Drop.reset();
     Drop.showResult();
   },
@@ -534,7 +573,8 @@ const Drop = {
     Modal.open("result");
 
     $(".result_modal h3.title").html(`천안 명물 받아먹기 게임 ( ${Game.user}님 )`);
-    $(".result_modal .score").html(`${Drop.score}점`);
+    $(".result_modal .score").html(`${Game.recordScore}점`);
+    Game.settingContainer();
   },
 
   drawBackground(){
